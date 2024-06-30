@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/v1.0/users/${userId}`,
+        `https://api.coolieno1.in/v1.0/users/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   const sendOtp = async (userInfo) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/v1.0/users/send-otp",
+        "https://api.coolieno1.in/v1.0/users/send-otp",
         {
           method: "POST",
           headers: {
@@ -123,13 +123,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/v1.0/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://api.coolieno1.in/v1.0/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
         },
-        body: JSON.stringify(loginData),
-      });
+      );
 
       if (response.ok) {
         const data = await response.json();
