@@ -91,14 +91,15 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("OTP sent successfully:", data); // Log the response data
         setUser({ ...userInfo, phone: data.phone });
         sessionStorage.setItem("phone", data.phone);
       } else {
         const errorData = await response.json();
-        console.error("Failed to send OTP", errorData);
+        console.error("Failed to send OTP:", errorData); // Log the error data
       }
     } catch (error) {
-      console.error("Error during OTP sending:", error);
+      console.error("Error during OTP sending:", error); // Log the error
     }
   };
 
