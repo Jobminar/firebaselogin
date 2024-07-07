@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `https://api.coolieno1.in/v1.0/users/${userId}`,
+        `https://api.coolieno1.in/v1.0/users/userAuth/${userId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -63,12 +63,15 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Fetched user info:", data);
         return data.user;
       } else {
+        const errorData = await response.json();
         console.error(
           "Error fetching user info:",
           response.status,
           response.statusText,
+          errorData,
         );
       }
     } catch (error) {
@@ -79,7 +82,7 @@ export const AuthProvider = ({ children }) => {
   const sendOtp = async (userInfo) => {
     try {
       const response = await fetch(
-        "https://api.coolieno1.in/v1.0/users/send-otp",
+        "https://api.coolieno1.in/v1.0/users/userAuth/send-otp",
         {
           method: "POST",
           headers: {
@@ -91,15 +94,15 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("OTP sent successfully:", data); // Log the response data
+        console.log("OTP sent successfully:", data);
         setUser({ ...userInfo, phone: data.phone });
         sessionStorage.setItem("phone", data.phone);
       } else {
         const errorData = await response.json();
-        console.error("Failed to send OTP:", errorData); // Log the error data
+        console.error("Failed to send OTP:", errorData);
       }
     } catch (error) {
-      console.error("Error during OTP sending:", error); // Log the error
+      console.error("Error during OTP sending:", error);
     }
   };
 
@@ -115,7 +118,7 @@ export const AuthProvider = ({ children }) => {
     const userInfo = googleUser || {};
     const loginData = {
       phone,
-      otp,
+      otp: isNaN(otp) ? otp : Number(otp),
       email: email || userInfo.email,
       name: name || userInfo.name,
       displayName: displayName || userInfo.displayName,
@@ -125,7 +128,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await fetch(
-        "https://api.coolieno1.in/v1.0/users/login",
+        "https://api.coolieno1.in/v1.0/users/userAuth/login",
         {
           method: "POST",
           headers: {
@@ -137,6 +140,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Login successful:", data);
         const expirationTime = Date.now() + 60 * 60 * 1000; // Assuming token expires in 1 hour
         sessionStorage.setItem("jwtToken", data.jwtToken);
         sessionStorage.setItem("userId", data.user._id);

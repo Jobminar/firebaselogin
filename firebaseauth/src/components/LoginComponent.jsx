@@ -55,7 +55,7 @@ const LoginComponent = () => {
         {otpSent && (
           <div className="input-group">
             <input
-              type="text"
+              type="number"
               placeholder="OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
